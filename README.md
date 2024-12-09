@@ -1,5 +1,14 @@
 # MockTail: The Fast and Easy Mock API Server
 
+
+```
+███╗░░░███╗░█████╗░░█████╗░██╗░░██╗████████╗░█████╗░██╗██╗░░░░░
+████╗░████║██╔══██╗██╔══██╗██║░██╔╝╚══██╔══╝██╔══██╗██║██║░░░░░
+██╔████╔██║██║░░██║██║░░╚═╝█████═╝░░░░██║░░░███████║██║██║░░░░░
+██║╚██╔╝██║██║░░██║██║░░██╗██╔═██╗░░░░██║░░░██╔══██║██║██║░░░░░
+██║░╚═╝░██║╚█████╔╝╚█████╔╝██║░╚██╗░░░██║░░░██║░░██║██║███████╗
+╚═╝░░░░░╚═╝░╚════╝░░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░╚═╝╚═╝╚══════╝
+```
 MockTail is an ultra-fast, file-based mock server designed for developers who need to quickly test and simulate APIs. Its dynamic file system approach allows you to set up and serve mock endpoints almost instantly by simply creating files in a structured directory.
 
 ## No Complex Configuration Required
