@@ -19,8 +19,8 @@ func (method Get) Process(ctx *gin.Context) error {
 
 	ctx.Header("Content-Description", "File Transfer")
 	ctx.Header("Content-Transfer-Encoding", "binary")
-	ctx.Header("Content-Disposition", "attachment; filename="+res.CompletePath)
-	ctx.Header("Content-Type", "application/octet-stream")
+	//ctx.Header("Content-Disposition", "attachment; filename="+res.CompletePath)
+	ctx.Header("Content-Type", "application/json")
 	ctx.File(res.CompletePath)
 
 	return nil
