@@ -3,4 +3,4 @@ port: 6000
 version: v1
 configPath: config.yml
 api:
-  entrypoint: ""
+  entrypoint: "/api"

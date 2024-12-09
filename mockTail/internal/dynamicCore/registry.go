@@ -1,55 +1,52 @@
 package dynamicCore
 
 import (
-  "os"
-  "path/filepath"
+	"errors"
+	"mockTail/mockTail/internal/config"
+	"mockTail/mockTail/internal/tools"
 )
 
 type Registry interface {
-  Find(path string) (*SourceResource, error)
-  Add()
-  Get()
-  Remove()
+	Update()
+	FindNode(request Request) (*Node, error)
+	Find(request Request) (*FileResource, error)
 }
 
 type registry struct {
-  routes []SourceResource
+	root *Node
 }
 
 func NewRegistry() Registry {
-  return &registry{}
+	basePath := tools.ArgsVal.SourceDirectory + config.GetConfig().Api.EntryPoint
+	return &registry{root: NewDirNode(basePath)}
 }
 
-func (r *registry) Find(path string) (*SourceResource, error) {
-  var target SourceResource
-  target.Path = path
-
-  err := filepath.WalkDir(path, func(p string, d os.DirEntry, err error) error {
-    if err != nil {
-      return err
-    }
-    if !d.IsDir() {
-      parser := NewParser(d)
-      res, err := NewResource(parser)
-      if err != nil {
-        return err
-      }
-      target.Resources = append(target.Resources, *res)
-    }
-    return nil
-  })
-  if err != nil {
-    return nil, err
-  }
-  r.routes = append(r.routes, target)
-  return &target, nil
+func (r registry) Find(request Request) (*FileResource, error) {
+	node, err := r.FindNode(request)
+	if err != nil || node == nil {
+		return nil, errors.New("resource not found")
+	}
+	return node.FindData(request)
 }
 
-func (r *registry) Add() {
+func (r registry) FindNode(request Request) (*Node, error) {
+	var node *Node
+	for _, parentPath := range request.GetSegmentPath() {
+		node = r.root.Find(parentPath)
+		if node != nil && node.Info.Path != request.RawPath && !node.Info.IsDynamic {
+			continue
+		}
+		if node != nil {
+			// exact match / dynamic match
+			break
+		}
+	}
+	return node, nil
 }
 
-func (r *registry) Get() {
-}
-
-func (r *registry) Remove() {
+func (r registry) Update() {
+	err := r.root.BuildTree()
+	if err != nil {
+		panic(err)
+	}
 }

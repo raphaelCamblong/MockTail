@@ -1,26 +1,27 @@
 package handlers
 
 import (
-  "github.com/gin-gonic/gin"
-  "mockTail/mockTail/internal/config"
-  "mockTail/mockTail/internal/dynamicCore"
-  "mockTail/mockTail/internal/tools"
+	"github.com/gin-gonic/gin"
+	"mockTail/mockTail/internal/dynamicCore"
+	"net/http"
 )
 
 type Get struct {
-  core dynamicCore.Core
+	core dynamicCore.Core
 }
 
 func (method Get) Process(ctx *gin.Context) error {
-  reqPath := ctx.Request.URL.Path
-  basePath := tools.ArgsVal.SourceDirectory + config.GetConfig().Api.EntryPoint
-  completePath := basePath + reqPath
+	res, err := method.core.FindFromContext(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return nil
+	}
 
-  _, err := method.core.GetResource(completePath)
-  if err != nil {
-    ctx.JSON(404, gin.H{"error": err.Error()})
-    return nil
-  }
-  ctx.JSON(200, gin.H{"data": "success"})
-  return nil
+	ctx.Header("Content-Description", "File Transfer")
+	ctx.Header("Content-Transfer-Encoding", "binary")
+	ctx.Header("Content-Disposition", "attachment; filename="+res.CompletePath)
+	ctx.Header("Content-Type", "application/octet-stream")
+	ctx.File(res.CompletePath)
+
+	return nil
 }
