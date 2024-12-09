@@ -1,1 +1,31 @@
-{}
+{
+  "test":
+  {
+    "name": "get.200.json",
+    "request":
+    {
+      "method": "GET",
+      "url":
+        {
+            "raw": "http://localhost:3000",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000"
+        }
+  },
+    "response":
+    [
+        {
+        "status": 200,
+        "body": "Hello World",
+        "header":
+        [
+            {
+            "key": "Content-Type",
+            "value": "text/plain"
+            }
+        ]
+        }
+    ]
+    }
+}
